@@ -122,7 +122,7 @@ In order to use Backand social you just need to call the SDK with the provider (
 By review file `app/views/auth/login.js` you could see that the code uses Backand SDK `socialSignUp` and `socialSignUp` methods.
 
 
-##### Managing Signed-Up Users
+#### Managing Signed-Up Users
 Back& provides an internal *Users* object for your app users. You can see the users table in **Secturity & Auth --> Registered Users**. However, it is highly recommended to create a separate 'users' object to hold custom information, as we did in the database model JSON.  Backand provides three predefined actions that synchronize the internal *Users* object with your custom one. You can customize these actions according to your needs. These actions are defined in the bottom of the **Configuration** page: **Create**, **Update** and **Delete My App User**. Some additional actions are predefined here, for instance, **requestResetPassword** sends email to users who forgot their password.
 **NOTE:** If you give a different name for your 'users' object, or have different fields you wish to synchronize, you should modify these actions accordingly. 
 **NOTE:** You can configure your own actions to perform on the *Users* object in the **configuration** page, or on any of the app database object, by selecting the object's name under **Objects** and clicking on the **Actions** tab. The actions can be triggered by database actions (hooks) or on demand, by calling the action's *Request Url* (presented when you test the action). Actions can send emails, execute transactional SQL scripts, and execute server-side JavaScript Code.
@@ -199,6 +199,7 @@ To make the modifications for the Update action, perform the following steps:
 4. Leave the *Input Parameters* empty
 5. In the *Type* drop-down, select *Server side JavaScript code*. A text area containing a JavaScript function will be displayed.
 6. Enter the following code as the body of the provided JavaScript function:
+
   ```javascript
     // if the current user has an *Admin* role then he is allowed to update a todo for other users
     if (userProfile.role == "Admin")
@@ -239,7 +240,9 @@ To make the modifications for the Update action, perform the following steps:
 	return {};
   ```
 7. Save the action.
+
 ### Modifying the Delete Action for Todo Objects
+
 There is no user input for delete requests, so you only need to verify that the item you about to delete was created by the current user.
 To make the modifications for the Update action, perform the following steps: 
 
@@ -281,7 +284,7 @@ To make the modifications for the Update action, perform the following steps:
         throw new Error('You can only delete your own todo.');
     return {};
   ```
-  7. Save the action
+7. Save the action
 
 ## Finished!
 At this point, your application is ready to use! You can test the security roles by signing in with a User role and see that you can only delete and update the todo items you create. If you then log out and log back in as a user with the *Admin* role, you will see that you can now perform all CRUD actions on every object in the database! You can also add a new user and see that they are assigned the *User* role by default, and not able to update records that are not their own.
