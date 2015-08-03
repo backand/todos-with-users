@@ -22,43 +22,43 @@ To get the application running, perform the following steps:
 
 
 1. Create a new application in [Backand](https://www.backand.com/apps).
-2. After creation, paste the following JSON into the "Custom Model" text box on the "New Hosted Database" tab. This JSON represents two objects that will be created in your database: the tasks list, named 'todo', and the users list. The two objects are related via the 'created_By' field in the 'todo' object and the collection 'todo' in the object 'users'.
+2. After creation, paste the following JSON into the "Custom Model" text box on the "New Hosted Database" tab. This JSON represents two objects that will be created in your database: the tasks list, named 'todo', and the users list. The two objects are related via the 'created_by' field in the 'todo' object and the collection 'todo' in the object 'users'.
 
   ```json
-[
-  {
-    "name": "todo",
-    "fields": {
-      "created_By": {
-        "object": "users"
-      },
-      "description": {
-        "type": "string"
-      },
-      "completed": {
-        "type": "boolean"
+  [
+    {
+      "name": "todo",
+      "fields": {
+        "created_by": {
+          "object": "users"
+        },
+        "description": {
+          "type": "string"
+        },
+        "completed": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "name": "users",
+      "fields": {
+        "todo": {
+          "collection": "todo",
+          "via": "created_by"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        }
       }
     }
-  },
-  {
-    "name": "users",
-    "fields": {
-      "todo": {
-        "collection": "todo",
-        "via": "created_By"
-      },
-      "email": {
-        "type": "string"
-      },
-      "firstName": {
-        "type": "string"
-      },
-      "lastName": {
-        "type": "string"
-      }
-    }
-  }
-]
+  ] 
   ```
 3. Press the "Next" button and wait for the database to be created (around 15 seconds).
 4. Open a console on your machine, and navigate to (or create) a directory to hold the source code.
@@ -95,7 +95,7 @@ Open your application in [Backand](https://www.backand.com/apps).
   4. Refresh the browser window presenting your app and click on 'Sign Out'. You will be able to see the todo list by clicking on the 'view the todo list as a guest (read only)' link in the sign in page. You will not be able to add or modify tasks.
 
 2. **Enable Sign Up and Set the New Users Role** 
-	1. Select *User* from the dropdown beneath the *Public App* heading. This will set the role that new users are given when they sign up for - or are created in - your application. By setting this to *User*, all new users will be created with the *User* role already assigned. 
+	1. Select *User* from the drop-down beneath the *Public App* heading. This will set the role that new users are given when they sign up for - or are created in - your application. By setting this to *User*, all new users will be created with the *User* role already assigned. 
 	2. Copy the API Sign-up Token and paste it in app/config/consts.js as the value of signUpToken.
 3. **Enable Public Sign Up** (optional)
 	Click on the switch on the right side of the panel to make your application Public. When enabled, this allows any user to register with your application. When disabled, all new users must be invited by a user with the *Admin* role (via the Security & Auth -> Registered Users section). This switch between *Public* and *Private* modes does not require a code change - it happens behind the scenes.
@@ -117,7 +117,7 @@ Back& provides an internal *Users* object for your app users. You can see the us
 
 Once you have completed the above, you are ready to begin inviting users to your application! To invite new users:
 
-1. Navigate to *Security & Auth --> Users* 
+1. Navigate to *Security & Auth --> Registered Users* 
 2. Enter an email in the *invite user(s)* input box. Please use a valid email address that is able to receive messages sent by Backand. 
 3. Click on *Invite User(s)* button. A new user will be added to the users list, and assigned the *User*. This will also trigger an invitation email that is sent to the entered email address.
 4. Open the email message.
@@ -132,16 +132,16 @@ At this point, when new users sign in they will have full access to the applicat
 2. Click on the *Actions* tab
 3. Click on the *New Action* button
 4. Name the action *Validate current user on create*
-5. In the *Event Trigger...* dropdown, select *Create - during data saving before it is committed*
+5. In the *Event Trigger...* drop-down, select *Create - During data saved before it committed*
 6. Leave the *Input Parameters* empty
-7. In the *Type* dropdown, select *Server side JavaScript code*. A text area containing a JavaScript function will be displayed. 
+7. In the *Type* drop-down, select *Server side JavaScript code*. A text area containing a JavaScript function will be displayed. 
 8. Paste the following code into the body of the provided function:
 
   ```javascript
     // if the current user has an *Admin* role then she is allowed to create a todo for another user
     if (userProfile.role == "Admin")
 	    return {};
-    var createdByFromInput = userInput.created_By;
+    var createdByFromInput = userInput.created_by;
     // do not allow anonymous users to create a todo
     if (!createdByFromInput)
         throw new Error('The creator of the todo is unknown.');
@@ -152,7 +152,7 @@ At this point, when new users sign in they will have full access to the applicat
     // get the current user information from the app users table by filter with the email
     var currentUser = null;
     try{
-        currentUser = $http({method:"GET",url:CONSTS.apiUrl + '/1/objects/users?filter=[{ fieldName: "email", operator: "equals", value: "' + encodeURIComponent(currentUsername) + '" }]', headers: {"Authorization":userProfile.token, "AppName": userProfile.app}});
+        currentUser = $http({method:"GET",url:CONSTS.apiUrl + '/1/objects/users?filter=[{ fieldName: "email", operator: "equals", value: "' + encodeURIComponent(currentUsername) + '" }]', headers: {"Authorization":userProfile.token}});
     }
     catch (err){
         throw new Error('Failed to get the current user. ' + err.message);
@@ -160,7 +160,7 @@ At this point, when new users sign in they will have full access to the applicat
     // get the current user id
     var currentUserId = null;
     if (currentUser && currentUser.data && currentUser.data.length == 1){
-        currentUserId = currentUser.data[0].Id;
+        currentUserId = currentUser.data[0].id;
     }
     else {
          throw new Error('Could not find the current user in the app.');
@@ -168,29 +168,32 @@ At this point, when new users sign in they will have full access to the applicat
     // do not allow non *Admin* users to create a todo for other users 
     if (createdByFromInput !=  currentUserId)
         throw new Error('Please create todo only for yourself.');
-	  return {};
+	
+	return {};
   ```  
 9. Save the action.  
 
 ### Modifying the Update Action for Todo Objects
 
-A similar modification needs to be made for when a *todo* item is updated. The only differece here is that we also need to validate that users with *User* role cannot change the creator of the *todo* item. To make the modifications for the Update action, perform the following steps: 
+A similar modification needs to be made for when a *todo* item is updated. 
+The only difference here is that we also need to validate that users with *User* role cannot change the creator of the *todo* item.
+To make the modifications for the Update action, perform the following steps: 
 
 1. Click on the *New Action* button
 2. Name the action *Validate current user on update*.    
-3. In the *Select Trigger...* dropdown, select *Update - during data saving before it is committed*
+3. In the *Select Trigger...* drop-down, select *Update - During data saved before it committed*
 4. Leave the *Input Parameters* empty
-5. In the *Type* dropdown, select *Server side javascript code*. A text area containing a JavaScript function will be displayed.
+5. In the *Type* drop-down, select *Server side JavaScript code*. A text area containing a JavaScript function will be displayed.
 6. Enter the following code as the body of the provided JavaScript function:
   ```javascript
     // if the current user has an *Admin* role then he is allowed to update a todo for other users
     if (userProfile.role == "Admin")
 	    return {};
-    var createdByFromInput = userInput.created_By;
+    var createdByFromInput = userInput.created_by;
     // do not allow anonymous users to create a todo
     if (!createdByFromInput)
         throw new Error('The creator of the todo is unknown.');
-    var createdByFromRow = dbRow.created_By;
+    var createdByFromRow = dbRow.created_by;
     if (!createdByFromRow)
         throw new Error('The creator of the todo is unknown.');
     var currentUsername = userProfile.username;
@@ -208,7 +211,7 @@ A similar modification needs to be made for when a *todo* item is updated. The o
     var currentUserId = null;
     // get the current user id
     if (currentUser && currentUser.data && currentUser.data.length == 1){
-        currentUserId = currentUser.data[0].Id;
+        currentUserId = currentUser.data[0].id;
     }
     else {
          throw new Error('Could not find the current user in the app.');
@@ -222,21 +225,22 @@ A similar modification needs to be made for when a *todo* item is updated. The o
 	return {};
   ```
 7. Save the action.
-### Modifying the Create Action for Todo Objects
-There is no user input for delete requests, so you only need to verify that the item you about to delete was created by the current user.  To make the modifications for the Update action, perform the following steps: 
+### Modifying the Delete Action for Todo Objects
+There is no user input for delete requests, so you only need to verify that the item you about to delete was created by the current user.
+To make the modifications for the Update action, perform the following steps: 
 
 1. Click on the *New Action* button
 2. Name the action *Validate current user on delete*. 
-3. In the *Select Trigger...* dropdown, select *Delete - during recored deleted before it is committed*.
+3. In the *Select Trigger...* drop-down, select *Delete - During record deleted but before it committed*.
 4. Leave the *Input Parameters* empty 
-5. In the *Type* dropdown, select *Server side javascript code*.  A text area containing a JavaScript function will be displayed.
+5. In the *Type* drop-down, select *Server side JavaScript code*.  A text area containing a JavaScript function will be displayed.
 6. Enter the following code as the body of the provided JavaScript function:
   
   ```javascript
     // if the current user has an *Admin* role then he is allowed to delete a todo that was created by other users
     if (userProfile.role == "Admin")
 	    return {};
-    var createdByFromRow = dbRow.created_By;
+    var createdByFromRow = dbRow.created_by;
     if (!createdByFromRow)
         throw new Error('The creator of the todo is unknown.');
     var currentUsername = userProfile.username;
@@ -253,7 +257,7 @@ There is no user input for delete requests, so you only need to verify that the 
     }
     var currentUserId = null;
     if (currentUser && currentUser.data && currentUser.data.length == 1){
-        currentUserId = currentUser.data[0].Id;
+        currentUserId = currentUser.data[0].id;
     }
     else {
          throw new Error('Could not find the current user in the app.');
