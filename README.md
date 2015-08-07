@@ -107,7 +107,7 @@ Open your application in [Backand](https://www.backand.com/apps).
 	2. Set **Custom Verified Email Page URL** to `http://localhost:9000/`. When **Sign-up Email Verification** is switched on, after a user registers they receive a verification email that includes a link to verify their identity. Once this is completed, they are redirected to the URL entered here.
 	3. Set **Custom Reset Password Page** to `http://localhost:9000/#/resetPassword`. This is the link that will be sent by email to users who forgot their password. (This page is also used for signed-in users to change their password.)
 
-At this stage, the app is ready for users to sign up, using email and password or via a social provider (Google, GitHub or Facebook). New users should select the ‘New User checkbox’ before signing in. Registered users can add tasks and modify them.
+At this point, users are able to register for your app. They can register organically using their own email and a password, or via social media provider integration, such as Google, Github, or Facebook. New users simply need to select the "New User" checkbox before signing in. All registered users can add or modify tasks.
 
 #### Forgot Password
 Once you updated the **Custom Reset Password Page** you can test the 'Forgot Password' functionality from the login page (Need to Sign Out first). Enter email of existing user and you should get an email with link back to the changePassword page.
