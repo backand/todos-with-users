@@ -78,7 +78,8 @@ To get the application running, perform the following steps:
   grunt serve
   ```
 7. Navigate to [localhost:9000](http://localhost:9000) to see the basic app in action!
-8. You can sign in to the app using you Back& credentials and the name you chose for the app. (The app name should later be configured in app/config/consts.js.) Then you will be able to add, edit and remove tasks.
+
+You can sign into the app using your Back& dashboard credentials along with the name you chose for your app (The app name should later be configured in app/config/consts.js.) You are now able to create, update, view, and delete tasks!
   
 ### Configuring the Application
 Open your application in [Backand](https://www.backand.com/apps).
@@ -106,20 +107,19 @@ Open your application in [Backand](https://www.backand.com/apps).
 	2. Set **Custom Verified Email Page URL** to `http://localhost:9000/`. When **Sign-up Email Verification** is switched on, after a user registers they receive a verification email that includes a link to verify their identity. Once this is completed, they are redirected to the URL entered here.
 	3. Set **Custom Reset Password Page** to `http://localhost:9000/#/resetPassword`. This is the link that will be sent by email to users who forgot their password. (This page is also used for signed-in users to change their password.)
 
-At this stage, the app is ready for users to sign up, using email and password or via a social provider (Google, GitHub or Facebook). New users should select the ‘New User checkbox’ before signing in. Registered users can add tasks and modify them.
+At this point, users are able to register for your app. They can register organically using their own email and a password, or via social media provider integration, such as Google, Github, or Facebook. New users simply need to select the "New User" checkbox before signing in. All registered users can add or modify tasks.
 
 #### Forgot Password
-Once you updated the **Custom Reset Password Page** you can test the 'Forgot Password' functionality from the login page (Need to Sign Out first). Enter email of existing user and you should get an email with link back to the changePassword page.
-By review file `app/views/auth/reset-password.js` you could see that the process is based on two methods from Backand SDK: `requestResetPassword` and `resetPassword`. The restPassword used after the user click on the link in the email.
-The email that the user gets can be edited to meet your app specifics at *Security & Auth --> Configuration* page in `requestResetPassword` on-demand action. 
+Once you've updated the **Custom Reset Password** page, you can test the app's 'reset password' functionality. This is accessible from the login page, so you may need to sign out of the application first. On the ensuing reset password page, simply enter the email address of a valid existing user, and that email address will receive a message with a link to your configured "change password" page.
+
+The file `app/views/auth/reset-password.js` shows that this process is based on two methods from the Backand SDK: `requestResetPassword` and `resetPassword`. The resetPassword method is used after the user clicks on the link received in the email message sent in the prior step. The content of this message can be edited in the Backand dashboard on the page *Security & Auth --> Configuration* page, in the `requestResetPassword` on-demand action. 
 
 #### Change Password
-Only after the user is signed in the password can be changed. You can test it by clicking on 'Change Password'.
-By review file `app/views/auth/change-password.js` you could see that the code uses Backand SDK `changePassword` method.
+Only users that are signed in may change their password.. You can test this functionality by clicking on 'Change Password'.
+The file `app/views/auth/change-password.js` reveals that this code simply uses the Backand SDK's `changePassword` method.
 
 #### Social sign up & sign in
-In order to use Backand social you just need to call the SDK with the provider (Google, GitHub or Facebook).
-By review file `app/views/auth/login.js` you could see that the code uses Backand SDK `socialSignUp` and `socialSignUp` methods.
+Backand's built-in social sign-in functionality is very easy to use - simply call the Backand SDK with the appropriate provider (Google, Github, or Facebook). You can see how this is done in the file `app/views/auth/login.js`, which shows that the code uses the Backand SDK's `socialSignUp` and `socialSignIn` methods.
 
 
 #### Managing Signed-Up Users
