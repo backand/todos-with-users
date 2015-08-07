@@ -78,7 +78,8 @@ To get the application running, perform the following steps:
   grunt serve
   ```
 7. Navigate to [localhost:9000](http://localhost:9000) to see the basic app in action!
-8. You can sign in to the app using you Back& credentials and the name you chose for the app. (The app name should later be configured in app/config/consts.js.) Then you will be able to add, edit and remove tasks.
+
+You can sign into the app using your Back& dashboard credentials along with the name you chose for your app (The app name should later be configured in app/config/consts.js.) You are now able to create, update, view, and delete tasks!
   
 ### Configuring the Application
 Open your application in [Backand](https://www.backand.com/apps).
