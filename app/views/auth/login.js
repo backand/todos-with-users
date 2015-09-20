@@ -33,7 +33,7 @@
         };
 
         self.signUp = function () {
-            AuthService.signUp(self.firstName, self.lastName, self.username, self.password, self.appName)
+            AuthService.signUp(self.firstName, self.lastName, self.username, self.password)
                 .then(
                 function (response) {
                     //check status of the sign in
@@ -53,7 +53,7 @@
         };
 
         self.signIn = function () {
-            AuthService.signIn(self.username, self.password, self.appName)
+            AuthService.signIn(self.username, self.password)
                 .then(
                 function () {
                     $state.go('todos');

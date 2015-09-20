@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function todoHttpInterceptor($q, $injector, $cookieStore) {
+    function todoHttpInterceptor($q, $injector, Backand) {
         return {
             requestError: function (rejection) {
                 return $q.reject(rejection);
@@ -11,9 +11,11 @@
             },
             responseError: function (rejection) {
                 if ((rejection.config.url + "").indexOf('token') === -1) {
-                    if (rejection.status === 401) {
+                    // When using refresh token, on 401 responses
+                    // Backand SDK manages refreshing the session and re-sending the requests
+                    if (rejection.status === 401 && !Backand.isManagingRefreshToken()) {
                         var errorMessage =
-                            $cookieStore.get('username') ?
+                            Backand.getUsername() ?
                                 'The session has expired, please sign in again.' :
                                 null;
                         $injector.get('$state').go('login', {error: errorMessage}, {reload: true});
@@ -26,5 +28,5 @@
     }
 
     angular.module('mytodoApp.config.interceptors', [])
-        .factory('todoHttpInterceptor', ['$q', '$injector', '$cookieStore', todoHttpInterceptor]);
+        .factory('todoHttpInterceptor', ['$q', '$injector', 'Backand', todoHttpInterceptor]);
 })();

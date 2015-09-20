@@ -11,12 +11,12 @@
         var self = this;
         var baseUrl = Backand.getApiUrl() + '/1/objects/';
 
-        var tableName = 'todo';
+        var objectName = 'todo';
 
         self.readAll = function () {
             return $http({
                 method: 'GET',
-                url: baseUrl + tableName
+                url: baseUrl + objectName
             }).then(function(response) {
                 return response.data.data;
             });
@@ -25,7 +25,7 @@
         self.readOne = function (id) {
             return $http({
                 method: 'GET',
-                url: baseUrl + tableName + '/' + id
+                url: baseUrl + objectName + '/' + id
             }).then(function(response) {
                 return response.data;
             });
@@ -34,7 +34,7 @@
         self.create = function (description) {
             return $http({
                 method: 'POST',
-                url : baseUrl + tableName,
+                url : baseUrl + objectName,
                 data: {
                     description: description,
                     created_By: AuthService.currentUser.details ? AuthService.currentUser.details.id : '' },
@@ -49,7 +49,7 @@
         self.update = function (id, data) {
             return $http({
                 method: 'PUT',
-                url : baseUrl + tableName + '/' + id,
+                url : baseUrl + objectName + '/' + id,
                 data: data
             }).then(function(response) {
                 return response.data;
@@ -59,7 +59,7 @@
         self.delete = function (id) {
             return $http({
                 method: 'DELETE',
-                url : baseUrl + tableName + '/' + id
+                url : baseUrl + objectName + '/' + id
             })
         };
 

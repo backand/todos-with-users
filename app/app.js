@@ -1,22 +1,23 @@
 'use strict';
 
 angular.module('mytodoApp', [
-    'ngCookies',
+    'backand',
     'ngResource',
     'ngSanitize',
     'ui.router',
     'ui.sortable',
-    'LocalStorageModule',
     'mytodoApp.config.interceptors',
-    'mytodoApp.config.consts',
-    'backand'
+    'mytodoApp.config.consts'
 ])
     .config(['$stateProvider', '$httpProvider', '$urlRouterProvider', 'BackandProvider', 'CONSTS',
         function ($stateProvider, $httpProvider, $urlRouterProvider, BackandProvider, CONSTS) {
-            BackandProvider.manageDefaultHeaders();
-            BackandProvider.setAnonymousToken(CONSTS.anonymousToken);
-            BackandProvider.setSignUpToken(CONSTS.signUpToken);
-            BackandProvider.setAppName(CONSTS.appName);
+            BackandProvider.setAnonymousToken(CONSTS.anonymousToken)
+                .setSignUpToken(CONSTS.signUpToken)
+                .setAppName(CONSTS.appName);
+
+            //By default in the SDK when signup is success it's automatically signin.
+            //In this app we wanted to show all the process so we turned it off.
+            BackandProvider.runSigninAfterSignup(false);
 
             $httpProvider.interceptors.push('todoHttpInterceptor');
 

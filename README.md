@@ -65,8 +65,8 @@ To get the application running, perform the following steps:
 5. Run the following commands from the console, to clone the repository and install dependencies:
 
   ```bash
-  git clone https://github.com/backand/angular-yeoman-todos.git --branch todo-with-users --single-branch
-  cd angular-yeoman-todos
+  git clone https://github.com/backand/todos-with-users.git
+  cd todos-with-users
 
   npm install
   bower install
