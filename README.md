@@ -81,13 +81,13 @@ To get the application running, perform the following steps:
 
 You can sign into the app using your Back& dashboard credentials along with the name you chose for your app (The app name should later be configured in app/config/consts.js.) You are now able to create, update, view, and delete tasks!
   
-### Configuring the Application
+## Configuring the Application
 Open your application in [Backand](https://www.backand.com/apps).
 
 #### Configure Security Settings
  Go to the *Security & Auth --> Configuration* page
 
-##### Configure Security Settings - User settings
+#### Configure Security Settings - User settings
 1. **Enable Anonymous Access**:
   Upon completion, this will allow users to access your application without logging in, and will assign these users a *ReadOnly* role.
   1. In the first section of the page, entitled *Anonymous Access*, click the switch on the right. It should turn green to indicate that anonymous access is enabled.
@@ -123,11 +123,40 @@ Backand's built-in social sign-in functionality is very easy to use - simply cal
 
 
 #### Managing Signed-Up Users
-Back& provides an internal *Users* object for your app users. You can see the users table in **Secturity & Auth --> Registered Users**. However, it is highly recommended to create a separate 'users' object to hold custom information, as we did in the database model JSON.  Backand provides three predefined actions that synchronize the internal *Users* object with your custom one. You can customize these actions according to your needs. These actions are defined in the bottom of the **Configuration** page: **Create**, **Update** and **Delete My App User**. Some additional actions are predefined here, for instance, **requestResetPassword** sends email to users who forgot their password.
+Back& provides an internal *users* object for your app users. You can see the users table in **Secturity & Auth --> Registered Users**. However, it is highly recommended to create a separate 'users' object to hold custom information, as we did in the database model JSON.  Backand provides three predefined actions that synchronize the internal *users* object with your custom one. You can customize these actions according to your needs. These actions are defined in the bottom of the **Configuration** page: **Create**, **Update** and **Delete My App User**. Some additional actions are predefined here, for instance, **requestResetPassword** sends email to users who forgot their password.
 **NOTE:** If you give a different name for your 'users' object, or have different fields you wish to synchronize, you should modify these actions accordingly. 
-**NOTE:** You can configure your own actions to perform on the *Users* object in the **configuration** page, or on any of the app database object, by selecting the object's name under **Objects** and clicking on the **Actions** tab. The actions can be triggered by database actions (hooks) or on demand, by calling the action's *Request Url* (presented when you test the action). Actions can send emails, execute transactional SQL scripts, and execute server-side JavaScript Code.
+**NOTE:** You can configure your own actions to perform on the *users* object in the **Configuration** page, or on any of the app database object, by selecting the object's name under **Objects** and clicking on the **Actions** tab. The actions can be triggered by database actions (hooks) or on demand, by calling the action's *Request Url* (presented when you test the action). Actions can send emails, execute transactional SQL scripts, and execute server-side JavaScript Code.
 
-## Invite Users to the application
+#### Saving Additional Parameters in the Sign up
+In many cases we would like to collect more information from the user during sign up. The additional information 
+should be added to the *users* object of the app. This option can be done by sending *parameters* in the client and 
+update the server side action in order to save it in the object. In our example we will collect the company name of 
+the user:
+
+1. Update the Model and add company field to *users* object:
+    1. Go to *Objects --> Model*
+    2. Add this element to the *users* object: *"company": {"type": "string"}*
+    3. Click on *Validate & Update*
+
+2. In the code when calling to Backand.signup() send parameters object as the last input parameter. The code looks 
+like this:
+  ```javascript
+    Backand.signup(firstName, lastName, username, password, password, {company: self.company}).then(...);
+  ```
+3. In the server side we need to modified the *Create My App User* action:
+    1. Go to *Security & Auth --> Configuration* and select *Create My App User*
+    2. Click on Edit
+    3. In the Input Parameters yype *company* 
+    4. Update the Sql Script to include the {{company}} parameter like this:
+  
+  ```SQL
+    insert into `users` (`email`,`firstName`,`lastName`,`company`) select '{{Username}}','{{FirstName}}','{{LastName}}','{{company}}'  FROM   DUAL  WHERE NOT EXISTS (SELECT * FROM `users` WHERE `email`='{{Username}}' )  LIMIT 1
+  ```
+4. In the UI make sure you collect the company value or send an empty value
+    
+Upon sign up completed you can see the company name in the *users* object Data tab.
+  
+## Invite Users to the Application
 
 Once you have completed the above, you are ready to begin inviting users to your application! To invite new users:
 
@@ -141,7 +170,7 @@ Once you have completed the above, you are ready to begin inviting users to your
 ## Set Current User Validation
 At this point, when new users sign in they will have full access to the application, and will be able to create, update and delete all the tasks. In order to restrict the users to update only tasks they created we will configure a few actions on the 'todo' object.
 
-### Modifying the Create Action for Todo Objects
+#### Modifying the Create Action for Todo Objects
 1. Go to *Objects --> todo* 
 2. Click on the *Actions* tab
 3. Click on the *New Action* button
@@ -187,7 +216,7 @@ At this point, when new users sign in they will have full access to the applicat
   ```  
 9. Save the action.  
 
-### Modifying the Update Action for Todo Objects
+#### Modifying the Update Action for Todo Objects
 
 A similar modification needs to be made for when a *todo* item is updated. 
 The only difference here is that we also need to validate that users with *User* role cannot change the creator of the *todo* item.
@@ -241,7 +270,7 @@ To make the modifications for the Update action, perform the following steps:
   ```
 7. Save the action.
 
-### Modifying the Delete Action for Todo Objects
+#### Modifying the Delete Action for Todo Objects
 
 There is no user input for delete requests, so you only need to verify that the item you about to delete was created by the current user.
 To make the modifications for the Update action, perform the following steps: 

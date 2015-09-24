@@ -53,12 +53,12 @@
                 });
         };
 
-        self.signUp = function (firstName, lastName, username, password, appName) {
-            return Backand.signup(firstName, lastName, username, password, password)
+        self.signUp = function (firstName, lastName, username, password, parameters) {
+            return Backand.signup(firstName, lastName, username, password, password, parameters)
                 .then(function (signUpResponse) {
 
                     if (signUpResponse.data.currentStatus === 1) {
-                        return self.signIn(username, password, appName)
+                        return self.signIn(username, password)
                             .then(function () {
                                 return signUpResponse;
                             });

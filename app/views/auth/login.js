@@ -33,7 +33,9 @@
         };
 
         self.signUp = function () {
-            AuthService.signUp(self.firstName, self.lastName, self.username, self.password)
+            var parameters = {company: self.company || ''};
+
+            AuthService.signUp(self.firstName, self.lastName, self.username, self.password, parameters)
                 .then(
                 function (response) {
                     //check status of the sign in
