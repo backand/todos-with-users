@@ -144,8 +144,8 @@ like this:
     Backand.signup(firstName, lastName, username, password, password, {company: self.company}).then(...);
   ```
 3. In the server side we need to modified the *Create My App User* action:
-    1. Go to *Security & Auth --> Configuration* and select *Create My App User*
-    2. Click on Edit
+    1. Go to *Security & Auth --> Security Actions* and select *Create My App User*
+    2. Click on Edit Action
     3. In the Input Parameters yype *company* 
     4. Update the Sql Script to include the {{company}} parameter like this:
   
