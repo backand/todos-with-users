@@ -14,7 +14,7 @@ Furthermore, there are two ways to access the application:
 ## Prerequisites
 To run this project, you will need:
 * [Git](http://git-scm.com/), for source control
-* [NodeJS and NPM](https://gist.github.com/isaacs/579814), to serve as a webserver
+* [NodeJS and NPM](https://gist.github.com/isaacs/579814), to serve as a web server
 * [Backand's Server side REST API](https://www.backand.com), to control the back-end of the application.
 
 ## Getting Started
@@ -22,7 +22,7 @@ To get the application running, perform the following steps:
 
 
 1. Create a new application in [Backand](https://www.backand.com/apps).
-2. After creation, paste the following JSON into the "Custom Model" text box on the "New Hosted Database" tab. This JSON represents two objects that will be created in your database: the tasks list, named 'todo', and the users list. The two objects are related via the 'created_by' field in the 'todo' object and the collection 'todo' in the object 'users'.
+2. After creation, open the Model under Objects menu, click on 'Model JSON' tab and paste the following JSON. This JSON represents two objects that will be created in your database: the tasks list, named 'todo', and the users list. The two objects are related via the 'created_by' field in the 'todo' object and the collection 'todo' in the object 'users'.
 
   ```json
   [
@@ -60,7 +60,7 @@ To get the application running, perform the following steps:
     }
   ] 
   ```
-3. Press the "Next" button and wait for the database to be created (around 15 seconds).
+3. Press "Validate & Update" to commit the changes.
 4. Open a console on your machine, and navigate to (or create) a directory to hold the source code.
 5. Run the following commands from the console, to clone the repository and install dependencies:
 
@@ -88,26 +88,21 @@ Open your application in [Backand](https://www.backand.com/apps).
  Go to the *Security & Auth --> Configuration* page
 
 #### Configure Security Settings - User settings
-1. **Enable Anonymous Access**:
-  Upon completion, this will allow users to access your application without logging in, and will assign these users a *ReadOnly* role.
-  1. In the first section of the page, entitled *Anonymous Access*, click the switch on the right. It should turn green to indicate that anonymous access is enabled.
-  2. In the drop-down that appeared beneath *Anonymous Access*, select *ReadOnly*.
-  3. Copy the Anonymous Token and paste it in app/config/consts.js as the value of 'anonymousToken'.
-  4. Refresh the browser window presenting your app and click on 'Sign Out'. You will be able to see the todo list by clicking on the 'view the todo list as a guest (read only)' link in the sign in page. You will not be able to add or modify tasks.
+1. **Change Anonymous Access to Read-Only**
+  By default all users have full access to read and update data. Let's change it to read only: 
+  1. In the drop-down that appeared beneath *Anonymous Access*, select *ReadOnly*.
+  2. Copy the Anonymous Token and paste it in app/config/consts.js as the value of 'anonymousToken'.
+  3. Refresh the browser window presenting your app and click on 'Sign Out'. You will be able to see the todo list by clicking on the 'view the todo list as a guest (read only)' link in the sign in page. You will not be able to add or modify tasks.
 
-2. **Enable Sign Up and Set the New Users Role** 
-	1. Select *User* from the drop-down beneath the *Public App* heading. This will set the role that new users are given when they sign up for - or are created in - your application. By setting this to *User*, all new users will be created with the *User* role already assigned. 
-	2. Copy the API Sign-up Token and paste it in app/config/consts.js as the value of signUpToken.
-3. **Enable Public Sign Up** (optional)
-	Click on the switch on the right side of the panel to make your application Public. When enabled, this allows any user to register with your application. When disabled, all new users must be invited by a user with the *Admin* role (via the Security & Auth -> Registered Users section). This switch between *Public* and *Private* modes does not require a code change - it happens behind the scenes.
-4. **Configure Authentication URLs** (optional)
-	Set the URLs for **Custom Registration Page**,  **Custom Verified Email Page** and **Custom Reset Password Page**. 
-	**NOTE: ** You will need to change the URLs when the app is published to a webserver instead of being run locally. 
-	1. Set **Custom Registration Page URL** to `http://localhost:9000/#/login`. This is the link that will be sent by email to users when invited by an *Admin*.
-	2. Set **Custom Verified Email Page URL** to `http://localhost:9000/`. When **Sign-up Email Verification** is switched on, after a user registers they receive a verification email that includes a link to verify their identity. Once this is completed, they are redirected to the URL entered here.
-	3. Set **Custom Reset Password Page** to `http://localhost:9000/#/resetPassword`. This is the link that will be sent by email to users who forgot their password. (This page is also used for signed-in users to change their password.)
+2. **Enable Sign Up from the client code**  
+	1. From Social & Keys menu copy the API Sign-up Token and paste it in app/config/consts.js as the value of 
+	signUpToken.
+	
+3. **Custom Reset Password Page** (optional)
+	3. In Configuration menu set **Custom Reset Password Page** to `http://localhost:9000/#/resetPassword`. This is the
+	 link that will be sent by email to users who forgot their password. (This page is also used for signed-in users to change their password.)
 
-At this point, users are able to register for your app. They can register organically using their own email and a password, or via social media provider integration, such as Google, Github, or Facebook. New users simply need to select the "New User" checkbox before signing in. All registered users can add or modify tasks.
+At this point, users are able to register for your app. They can register organically using their own email and a password, or via social media provider integration, such as Google, GitHub, or Facebook. New users simply need to select the "New User" checkbox before signing in. All registered users can add or modify tasks.
 
 #### Forgot Password
 Once you've updated the **Custom Reset Password** page, you can test the app's 'reset password' functionality. This is accessible from the login page, so you may need to sign out of the application first. On the ensuing reset password page, simply enter the email address of a valid existing user, and that email address will receive a message with a link to your configured "change password" page.
@@ -115,7 +110,7 @@ Once you've updated the **Custom Reset Password** page, you can test the app's '
 The file `app/views/auth/reset-password.js` shows that this process is based on two methods from the Backand SDK: `requestResetPassword` and `resetPassword`. The resetPassword method is used after the user clicks on the link received in the email message sent in the prior step. The content of this message can be edited in the Backand dashboard on the page *Security & Auth --> Configuration* page, in the `requestResetPassword` on-demand action. 
 
 #### Change Password
-Only users that are signed in may change their password.. You can test this functionality by clicking on 'Change Password'.
+Only users that are signed in may change their password. You can test this functionality by clicking on 'Change Password'.
 The file `app/views/auth/change-password.js` reveals that this code simply uses the Backand SDK's `changePassword` method.
 
 #### Social sign up & sign in
@@ -123,7 +118,7 @@ Backand's built-in social sign-in functionality is very easy to use - simply cal
 
 
 #### Managing Signed-Up Users
-Back& provides an internal *users* object for your app users. You can see the users table in **Secturity & Auth --> Registered Users**. However, it is highly recommended to create a separate 'users' object to hold custom information, as we did in the database model JSON.  Backand provides three predefined actions that synchronize the internal *users* object with your custom one. You can customize these actions according to your needs. These actions are defined in the bottom of the **Configuration** page: **Create**, **Update** and **Delete My App User**. Some additional actions are predefined here, for instance, **requestResetPassword** sends email to users who forgot their password.
+Back& provides an internal *users* object for your app users. You can see the users table in **Secturity & Auth --> Registered Users**. However, it is highly recommended to keep the 'users' object of the app to hold custom information.  Backand provides three predefined actions that synchronize the internal *users* object with your custom one. You can customize these actions according to your needs. These actions are defined in the bottom of the **Configuration** page: **Create**, **Update** and **Delete My App User**. Some additional actions are predefined here, for instance, **requestResetPassword** sends email to users who forgot their password.
 **NOTE:** If you give a different name for your 'users' object, or have different fields you wish to synchronize, you should modify these actions accordingly. 
 **NOTE:** You can configure your own actions to perform on the *users* object in the **Configuration** page, or on any of the app database object, by selecting the object's name under **Objects** and clicking on the **Actions** tab. The actions can be triggered by database actions (hooks) or on demand, by calling the action's *Request Url* (presented when you test the action). Actions can send emails, execute transactional SQL scripts, and execute server-side JavaScript Code.
 
