@@ -1,64 +1,59 @@
 (function () {
     angular.module('mytodoApp')
-        .service('AuthService', ['CONSTS', '$http', 'Backand', AuthService]);
+        .service('AuthService', ['Backand', AuthService]);
 
-    function AuthService(CONSTS, $http, Backand) {
+    function AuthService(Backand) {
 
         var self = this;
-        var baseUrl = Backand.getApiUrl() + '/1/objects/';
-        self.appName = CONSTS.appName || '';
         self.currentUser = {};
 
         loadUserDetails();
 
         function loadUserDetails() {
-            self.currentUser.name = Backand.getUsername();
-            if (self.currentUser.name) {
-                getCurrentUserInfo()
-                    .then(function (data) {
-                        self.currentUser.details = data;
-                    });
-            }
+
+            return Backand.getUserDetails()
+                .then(function (data) {
+                    self.currentUser.details = data;
+                    if(data !== null)
+                        self.currentUser.name = data.username;
+                });
+
         }
 
         self.getSocialProviders = function () {
             return Backand.getSocialProviders()
         };
 
-        self.socialSignIn = function (provider) {
-            return Backand.socialSignIn(provider)
+        self.socialSignin = function (provider) {
+            Backand.setRunSignupAfterErrorInSigninSocial(false); //by default run sign-up if there is no sign in
+            return Backand.socialSignin(provider)
                 .then(function (response) {
                     loadUserDetails();
                     return response;
                 });
         };
 
-        self.socialSignUp = function (provider) {
+        self.socialSignup = function (provider) {
             return Backand.socialSignUp(provider)
                 .then(function (response) {
-                    loadUserDetails();
-                    return response;
+                  loadUserDetails();
+                  return response;
                 });
         };
 
-        self.setAppName = function (newAppName) {
-            self.appName = newAppName;
-        };
-
-        self.signIn = function (username, password, appName) {
-            return Backand.signin(username, password, appName)
+        self.signin = function (username, password) {
+            return Backand.signin(username, password)
                 .then(function (response) {
                     loadUserDetails();
                     return response;
                 });
         };
 
-        self.signUp = function (firstName, lastName, username, password, parameters) {
+        self.signup = function (firstName, lastName, username, password, parameters) {
             return Backand.signup(firstName, lastName, username, password, password, parameters)
                 .then(function (signUpResponse) {
-
                     if (signUpResponse.data.currentStatus === 1) {
-                        return self.signIn(username, password)
+                        return self.signin(username, password)
                             .then(function () {
                                 return signUpResponse;
                             });
@@ -74,7 +69,7 @@
         };
 
         self.requestResetPassword = function (username) {
-            return Backand.requestResetPassword(username, self.appName)
+            return Backand.requestResetPassword(username)
         };
 
         self.resetPassword = function (password, token) {
@@ -86,23 +81,6 @@
                 angular.copy({}, self.currentUser);
             });
         };
-
-        function getCurrentUserInfo() {
-            return $http({
-                method: 'GET',
-                url: baseUrl + "users",
-                params: {
-                    filter: JSON.stringify([{
-                        fieldName: "email",
-                        operator: "contains",
-                        value: self.currentUser.name
-                    }])
-                }
-            }).then(function (response) {
-                if (response.data && response.data.data && response.data.data.length == 1)
-                    return response.data.data[0];
-            });
-        }
 
     }
 

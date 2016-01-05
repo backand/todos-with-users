@@ -36,8 +36,8 @@
                 method: 'POST',
                 url : baseUrl + objectName,
                 data: {
-                    description: description,
-                    created_By: AuthService.currentUser.details ? AuthService.currentUser.details.id : '' },
+                    description: description
+                },
                 params: {
                     returnObject: true
                 }

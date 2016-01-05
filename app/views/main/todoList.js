@@ -16,13 +16,13 @@
         /**
          * init by reading the to do list from the database
          */
+        clearError();
         readTodoList();
 
         /**
          * Read the to do list from the database
          */
         function readTodoList() {
-            clearError();
             TodoService.readAll().then(onReadListSuccess, errorHandler);
         }
 
@@ -95,6 +95,8 @@
             } else {
                 self.error = "Unexpected failure";
             }
+
+            readTodoList();
         }
 
         function clearError() {

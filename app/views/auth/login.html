@@ -43,15 +43,6 @@
                        required>
             </div>
 
-            <div class="form-group" ng-hide="login.appNameExists">
-                <input type="text"
-                       class="form-control"
-                       name="appName"
-                       placeholder="Your Backand app name"
-                       ng-model="login.appName"
-                       required>
-            </div>
-
             <div class="form-group">
                 <input type="text"
                        class="form-control"
@@ -102,7 +93,7 @@
     <a class="btn btn-block btn-social"
        ng-repeat="(providerKey, providerDetails) in login.socialProviders"
        ng-class="'btn-' + providerDetails.name"
-       ng-click="login.socialSignIn(providerDetails)">
+       ng-click="login.socialSignin(providerDetails)">
         <i class="fa" ng-class="'fa-' + providerDetails.css"></i> {{providerDetails.label}}
     </a>
 </div>

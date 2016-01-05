@@ -15,7 +15,6 @@
         var self = this;
 
         self.appName = AuthService.appName;
-        self.appNameExists = !!self.appName;
         self.error = $state.params.error;
         self.socialProviders = AuthService.getSocialProviders();
 
@@ -23,19 +22,17 @@
             self.error = null;
             self.success = null;
 
-            AuthService.setAppName(self.appName);
-
             if (self.newUser) {
-                self.signUp();
+                self.signup();
             } else {
-                self.signIn();
+                self.signin();
             }
         };
 
-        self.signUp = function () {
+        self.signup = function () {
             var parameters = {company: self.company || ''};
 
-            AuthService.signUp(self.firstName, self.lastName, self.username, self.password, parameters)
+            AuthService.signup(self.firstName, self.lastName, self.username, self.password, parameters)
                 .then(
                 function (response) {
                     //check status of the sign in
@@ -54,13 +51,12 @@
             );
         };
 
-        self.signIn = function () {
-            AuthService.signIn(self.username, self.password)
+        self.signin = function () {
+            AuthService.signin(self.username, self.password)
                 .then(
                 function () {
                     $state.go('todos');
                 },
-
                 showError
             );
         };
@@ -73,11 +69,11 @@
             $state.go('todos');
         }
 
-        self.socialSignIn = function (provider) {
+        self.socialSignin = function (provider) {
             self.newUser ?
-                AuthService.socialSignUp(provider.name)
+                AuthService.socialSignup(provider.name)
                     .then(gotoTodos, showError) :
-                AuthService.socialSignIn(provider.name)
+                AuthService.socialSignin(provider.name)
                     .then(gotoTodos, showError);
         };
 

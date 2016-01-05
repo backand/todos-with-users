@@ -1,7 +1,13 @@
-# Todo Project With User Roles
+# Todo Project With User Management
 
-This demo application shows you how to implement [Backand](https://www.backand.com) user roles in a basic ToDo application written in AngularJS. This demonstrates the security features that Backand's API has to offer, and allows you to see how actions by a user are restricted based upon their assigned role.
+This demo application shows you how to implement [Backand](https://www.backand.com) user management and social 
+sign-up, all in a basic ToDo application written in AngularJS. This demonstrates the security features that Backand's API has to offer, and allows you to see how actions by a user are restricted based upon their assigned role.
 
+##Example
+
+You can review the example @ [codepen](http://codepen.io/backand/pen/meNgME)
+
+##Overview
 The Todo project has the following user roles enabled:
 * An *Admin* role, with which the user can perform all available CRUD actions on all items
 * A *User* role, which allows the user to read all items, but to only Create, Update, or Delete items that have been created by the user.
@@ -11,15 +17,38 @@ Furthermore, there are two ways to access the application:
 * Users with the *Admin* or *User* roles must sign in with their username and password
 * Users that browse the app without signing in are assigned the *ReadOnly* role (In the code, those users are referred to as *anonymous users*).
 
-## Prerequisites
-To run this project, you will need:
-* [Git](http://git-scm.com/), for source control
-* [NodeJS and NPM](https://gist.github.com/isaacs/579814), to serve as a web server
-* [Backand's Server side REST API](https://www.backand.com), to control the back-end of the application.
-
 ## Getting Started
 To get the application running, perform the following steps:
 
+Install **node.js**. Then **gulp** and **bower** if you haven't yet.
+
+```bash
+    $ npm -g install gulp bower
+```    
+
+After that, let's clone the repository project:
+
+```bash
+    $ git clone https://github.com/backand/todos-with-users.git
+    $ cd todos-with-users
+```    
+    
+Install bower and npm dependencies, and run the application in development mode.
+
+```bash
+    $ npm install
+    $ bower install
+    $ grunt serve
+```    
+
+Navigate to [localhost:9000](http://localhost:9000) to see the basic app in action!
+
+You can sign into the app using your Back& dashboard credentials along with the name you chose for your app (The app name should later be configured in app/config/consts.js.) You are now able to create, update, view, and delete tasks!
+ 
+
+##Create the Demo Step By Step
+
+Follow these steps to create the app from scratch using your account:
 
 1. Create a new application in [Backand](https://www.backand.com/apps).
 2. After creation, open the Model under Objects menu, click on 'Model JSON' tab and paste the following JSON. This JSON represents two objects that will be created in your database: the tasks list, named 'todo', and the users list. The two objects are related via the 'created_by' field in the 'todo' object and the collection 'todo' in the object 'users'.
@@ -61,25 +90,8 @@ To get the application running, perform the following steps:
   ] 
   ```
 3. Press "Validate & Update" to commit the changes.
-4. Open a console on your machine, and navigate to (or create) a directory to hold the source code.
-5. Run the following commands from the console, to clone the repository and install dependencies:
+4. Open the code in folder `todos-with-users` and start configure the application
 
-  ```bash
-  git clone https://github.com/backand/todos-with-users.git
-  cd todos-with-users
-
-  npm install
-  bower install
-  ```
-
-6. Run the app:
-
-  ```bash
-  grunt serve
-  ```
-7. Navigate to [localhost:9000](http://localhost:9000) to see the basic app in action!
-
-You can sign into the app using your Back& dashboard credentials along with the name you chose for your app (The app name should later be configured in app/config/consts.js.) You are now able to create, update, view, and delete tasks!
   
 ## Configuring the Application
 Open your application in [Backand](https://www.backand.com/apps).
@@ -102,7 +114,7 @@ Open your application in [Backand](https://www.backand.com/apps).
 	3. In Configuration menu set **Custom Reset Password Page** to `http://localhost:9000/#/resetPassword`. This is the
 	 link that will be sent by email to users who forgot their password. (This page is also used for signed-in users to change their password.)
 
-At this point, users are able to register for your app. They can register organically using their own email and a password, or via social media provider integration, such as Google, GitHub, or Facebook. New users simply need to select the "New User" checkbox before signing in. All registered users can add or modify tasks.
+At this point, users are able to register to your app. They can register organically using their own email and a password, or via social media provider integration, such as Google, GitHub, or Facebook. New users simply need to select the "New User" checkbox before signing in. All registered users can add or modify tasks.
 
 #### Forgot Password
 Once you've updated the **Custom Reset Password** page, you can test the app's 'reset password' functionality. This is accessible from the login page, so you may need to sign out of the application first. On the ensuing reset password page, simply enter the email address of a valid existing user, and that email address will receive a message with a link to your configured "change password" page.
@@ -138,16 +150,10 @@ like this:
   ```javascript
     Backand.signup(firstName, lastName, username, password, password, {company: self.company}).then(...);
   ```
-3. In the server side we need to modified the *Create My App User* action:
-    1. Go to *Security & Auth --> Security Actions* and select *Create My App User*
-    2. Click on Edit Action
-    3. In the Input Parameters yype *company* 
-    4. Update the Sql Script to include the {{company}} parameter like this:
-  
-  ```SQL
-    insert into `users` (`email`,`firstName`,`lastName`,`company`) select '{{Username}}','{{FirstName}}','{{LastName}}','{{company}}'  FROM   DUAL  WHERE NOT EXISTS (SELECT * FROM `users` WHERE `email`='{{Username}}' )  LIMIT 1
-  ```
-4. In the UI make sure you collect the company value or send an empty value
+3. In the server side there is no need to do anything, new parameters are handled by the Action `Create My App 
+User` under the *Security Actions* menu.
+
+4. In the UI make sure you collect the `company` value
     
 Upon sign up completed you can see the company name in the *users* object Data tab.
   
@@ -166,11 +172,12 @@ Once you have completed the above, you are ready to begin inviting users to your
 At this point, when new users sign in they will have full access to the application, and will be able to create, update and delete all the tasks. In order to restrict the users to update only tasks they created we will configure a few actions on the 'todo' object.
 
 #### Modifying the Create Action for Todo Objects
+
 1. Go to *Objects --> todo* 
 2. Click on the *Actions* tab
 3. Click on the *New Action* button
 4. Name the action *Validate current user on create*
-5. In the *Event Trigger...* drop-down, select *Create - During data saved before it committed*
+5. In the *Event Trigger...* drop-down, select *Create - Before adding data*
 6. Leave the *Input Parameters* empty
 7. In the *Type* drop-down, select *Server side JavaScript code*. A text area containing a JavaScript function will be displayed. 
 8. Paste the following code into the body of the provided function:
@@ -178,36 +185,30 @@ At this point, when new users sign in they will have full access to the applicat
   ```javascript
     // if the current user has an *Admin* role then she is allowed to create a todo for another user
     if (userProfile.role == "Admin")
-	    return {};
-    var createdByFromInput = userInput.created_by;
-    // do not allow anonymous users to create a todo
-    if (!createdByFromInput)
-        throw new Error('The creator of the todo is unknown.');
-    var currentUsername = userProfile.username;
-    if (!currentUsername)
-        throw new Error('The current user is unknown.');
-    
+      return {};
+
     // get the current user information from the app users table by filter with the email
-    var currentUser = null;
+    var currentUserId = null;
     try{
-        currentUser = $http({method:"GET",url:CONSTS.apiUrl + '/1/objects/users?filter=[{ fieldName: "email", operator: "equals", value: "' + encodeURIComponent(currentUsername) + '" }]', headers: {"Authorization":userProfile.token}});
+        var currentUser = $http({
+            method: "GET",
+            url:CONSTS.apiUrl + "/1/objects/users",
+            params: {filter:[{"fieldName":"email", "operator":"equals", "value": userProfile.username }]},
+            headers: {"Authorization": userProfile.token}
+        });
+        // get the current user id
+        if (currentUser && currentUser.data && currentUser.data.length == 1){
+            currentUserId = currentUser.data[0].id;
+        }
     }
     catch (err){
         throw new Error('Failed to get the current user. ' + err.message);
     }
-    // get the current user id
-    var currentUserId = null;
-    if (currentUser && currentUser.data && currentUser.data.length == 1){
-        currentUserId = currentUser.data[0].id;
-    }
-    else {
-         throw new Error('Could not find the current user in the app.');
-    }
-    // do not allow non *Admin* users to create a todo for other users 
-    if (createdByFromInput !=  currentUserId)
-        throw new Error('Please create todo only for yourself.');
-	
-	return {};
+
+    //set the current user id to be the creator
+    userInput.created_by = currentUserId;
+    
+    return {};
   ```  
 9. Save the action.  
 
@@ -227,41 +228,38 @@ To make the modifications for the Update action, perform the following steps:
   ```javascript
     // if the current user has an *Admin* role then he is allowed to update a todo for other users
     if (userProfile.role == "Admin")
-	    return {};
-    var createdByFromInput = userInput.created_by;
-    // do not allow anonymous users to create a todo
-    if (!createdByFromInput)
-        throw new Error('The creator of the todo is unknown.');
-    var createdByFromRow = dbRow.created_by;
-    if (!createdByFromRow)
-        throw new Error('The creator of the todo is unknown.');
-    var currentUsername = userProfile.username;
-    if (!currentUsername)
-        throw new Error('The current user is unknown.');
-    
-    // get the current user information from the app users table by filter with the email
-    var currentUser = null;
-    try{
-        currentUser = $http({method:"GET",url:CONSTS.apiUrl + '/1/objects/users?filter=[{ fieldName: "email", operator: "equals", value: "' + encodeURIComponent(currentUsername) + '" }]', headers: {"Authorization":userProfile.token, "AppName": userProfile.app}});
+      return {};
+
+    if (!dbRow.created_by)
+        throw new Error('Todo with no creator can\'t be updated.');
+
+    // do not allow users to change the created by field 
+    if (dbRow.created_by !=  userInput.created_by)
+        throw new Error('You can\'t change the creator of the todo.');
+        
+    // get the current user information from the users object by filter with the email
+    var currentUserId = null;
+    try {
+        var currentUser = $http({
+            method: "GET",
+            url:CONSTS.apiUrl + "/1/objects/users",
+            params: {filter:[{"fieldName":"email", "operator":"equals", "value": userProfile.username }]},
+            headers: {"Authorization": userProfile.token}
+        });
+        
+        // get the current user id
+        if (currentUser && currentUser.data && currentUser.data.length == 1){
+            currentUserId = currentUser.data[0].id;
+        }
     }
     catch (err){
         throw new Error('Failed to get the current user. ' + err.message);
     }
-    var currentUserId = null;
-    // get the current user id
-    if (currentUser && currentUser.data && currentUser.data.length == 1){
-        currentUserId = currentUser.data[0].id;
-    }
-    else {
-         throw new Error('Could not find the current user in the app.');
-    }
-    // do not allow non *Admin* users to update a todo for other users 
-    if (createdByFromRow !=  createdByFromInput)
-        throw new Error('You can can not change the creator of the todo.');
+        
     // do not allow non *Admin* users to change the creator of the todo 
-    if (createdByFromInput !=  currentUserId)
+    if (dbRow.created_by != currentUserId)
         throw new Error('You can only update your own todo.');
-	return {};
+    return {};
   ```
 7. Save the action.
 
