@@ -206,26 +206,8 @@ At this point, when new users sign in they will have full access to the applicat
     if (userProfile.role == "Admin")
       return {};
 
-    // get the current user information from the app users table by filter with the email
-    var currentUserId = null;
-    try{
-        var currentUser = $http({
-            method: "GET",
-            url:CONSTS.apiUrl + "/1/objects/users",
-            params: {filter:[{"fieldName":"email", "operator":"equals", "value": userProfile.username }]},
-            headers: {"Authorization": userProfile.token}
-        });
-        // get the current user id
-        if (currentUser && currentUser.data && currentUser.data.length == 1){
-            currentUserId = currentUser.data[0].id;
-        }
-    }
-    catch (err){
-        throw new Error('Failed to get the current user. ' + err.message);
-    }
-
     //set the current user id to be the creator
-    userInput.created_by = currentUserId;
+    userInput.created_by = userProfile.userId;
     
     return {};
   ```  
@@ -256,27 +238,8 @@ To make the modifications for the Update action, perform the following steps:
     if (dbRow.created_by !=  userInput.created_by)
         throw new Error('You can\'t change the creator of the todo.');
         
-    // get the current user information from the users object by filter with the email
-    var currentUserId = null;
-    try {
-        var currentUser = $http({
-            method: "GET",
-            url:CONSTS.apiUrl + "/1/objects/users",
-            params: {filter:[{"fieldName":"email", "operator":"equals", "value": userProfile.username }]},
-            headers: {"Authorization": userProfile.token}
-        });
-        
-        // get the current user id
-        if (currentUser && currentUser.data && currentUser.data.length == 1){
-            currentUserId = currentUser.data[0].id;
-        }
-    }
-    catch (err){
-        throw new Error('Failed to get the current user. ' + err.message);
-    }
-        
     // do not allow non *Admin* users to change the creator of the todo 
-    if (dbRow.created_by != currentUserId)
+    if (dbRow.created_by != userProfile.userId)
         throw new Error('You can only update your own todo.');
     return {};
   ```
@@ -297,32 +260,15 @@ To make the modifications for the Update action, perform the following steps:
   ```javascript
     // if the current user has an *Admin* role then he is allowed to delete a todo that was created by other users
     if (userProfile.role == "Admin")
-	    return {};
-    var createdByFromRow = dbRow.created_by;
-    if (!createdByFromRow)
-        throw new Error('The creator of the todo is unknown.');
-    var currentUsername = userProfile.username;
-    if (!currentUsername)
-        throw new Error('The current user is unknown.');
-    
-    var currentUser = null;
-    // get the current user information from the app users table by filter with the email
-    try{
-        currentUser = $http({method:"GET",url:CONSTS.apiUrl + '/1/objects/users?filter=[{ fieldName: "email", operator: "equals", value: "' + encodeURIComponent(currentUsername) + '" }]', headers: {"Authorization":userProfile.token, "AppName": userProfile.app}});
-    }
-    catch (err){
-        throw new Error('Failed to get the current user. ' + err.message);
-    }
-    var currentUserId = null;
-    if (currentUser && currentUser.data && currentUser.data.length == 1){
-        currentUserId = currentUser.data[0].id;
-    }
-    else {
-         throw new Error('Could not find the current user in the app.');
-    }
+      return {};
+      
+     if (!dbRow.created_by)
+        throw new Error('Todo with no creator can\'t be deleted.');
+            
     // do not allow non *Admin* users to delete a todo created by other users 
-    if (createdByFromRow !=  currentUserId)
+    if (dbRow.created_by != userProfile.userId)
         throw new Error('You can only delete your own todo.');
+            
     return {};
   ```
 7. Save the action
