@@ -44,8 +44,27 @@ Install bower and npm dependencies, and run the application in development mode.
 Navigate to [localhost:9000](http://localhost:9000) to see the basic app in action!
 
 You can sign into the app using your Back& dashboard credentials along with the name you chose for your app (The app name should later be configured in app/config/consts.js.) You are now able to create, update, view, and delete tasks!
- 
 
+## Build
+
+To build the project run the follow grunt command:
+
+```bash
+    $ grunt build
+```
+
+The build process creates a `dist` folder with minified JS and CSS files. For production or hosting this is the only 
+folder you need.
+
+## Host
+
+You can host the project on Backand's cloud.
+
+To leverage Backand's hosting you need to create a new app first and install Backand's cli tool.
+
+After the app was created, go to Hosting menu and follow the easy steps of installation. Make sure the sync
+ command use the `dist` folder (--folder parameter).
+ 
 ##Create the Demo Step By Step
 
 Follow these steps to create the app from scratch using your account:
