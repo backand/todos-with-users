@@ -20,10 +20,10 @@ Furthermore, there are two ways to access the application:
 ## Getting Started
 To get the application running, perform the following steps:
 
-Install **node.js**. Then **gulp** and **bower** if you haven't yet.
+Install **node.js**. Then **grunt** and **bower** if you haven't yet.
 
 ```bash
-    $ npm -g install gulp bower
+    $ npm -g install grunt bower
 ```    
 
 After that, let's clone the repository project:
