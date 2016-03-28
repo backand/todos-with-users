@@ -71,7 +71,7 @@
 
         self.socialSignin = function (provider) {
             self.newUser ?
-                AuthService.socialSignup(provider.name)
+                AuthService.socialSignup(provider.name, self.username)
                     .then(gotoTodos, showError) :
                 AuthService.socialSignin(provider.name)
                     .then(gotoTodos, showError);

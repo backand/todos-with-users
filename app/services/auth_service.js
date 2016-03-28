@@ -33,8 +33,8 @@
                 });
         };
 
-        self.socialSignup = function (provider) {
-            return Backand.socialSignUp(provider)
+        self.socialSignup = function (provider, email) {
+            return Backand.socialSignUp(provider, null, null, email)
                 .then(function (response) {
                   loadUserDetails();
                   return response;
