@@ -13,8 +13,7 @@ angular.module('mytodoApp', [
         function ($stateProvider, $httpProvider, $urlRouterProvider, BackandProvider, CONSTS) {
             BackandProvider.setAnonymousToken(CONSTS.anonymousToken)
                 .setSignUpToken(CONSTS.signUpToken)
-                .setAppName(CONSTS.appName)
-                .setApiUrl('http://api.backand.co:8099');
+                .setAppName(CONSTS.appName);
 
             //By default in the SDK when signup is success it's automatically signin.
             //In this app we wanted to show all the process so we turned it off.
