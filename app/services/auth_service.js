@@ -25,16 +25,17 @@
         };
 
         self.socialSignin = function (provider) {
-            Backand.setRunSignupAfterErrorInSigninSocial(false); //by default run sign-up if there is no sign in
-            return Backand.socialSignin(provider)
+            //by default Backand doesn't run sign-in if the user is not sign-up, the 4th parameter true force it to
+          // sign-up the user
+            return Backand.socialSignin(provider, null, true)
                 .then(function (response) {
                     loadUserDetails();
                     return response;
                 });
         };
 
-        self.socialSignup = function (provider) {
-            return Backand.socialSignUp(provider)
+        self.socialSignup = function (provider, email) {
+            return Backand.socialSignUp(provider, null, null, email)
                 .then(function (response) {
                   loadUserDetails();
                   return response;
