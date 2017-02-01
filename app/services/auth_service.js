@@ -11,11 +11,16 @@
 
         function loadUserDetails() {
 
-            return Backand.getUserDetails()
+            return Backand.user.getUserDetails()
                 .then(function (data) {
                     self.currentUser.details = data;
                     if(data !== null)
+                    {
                         self.currentUser.name = data.username;
+                    }
+                    else {
+                      Backand.useAnonymousAuth(true);
+                    }
                 });
 
         }
@@ -46,6 +51,7 @@
             return Backand.signin(username, password)
                 .then(function (response) {
                     loadUserDetails();
+                    Backand.useAnonymousAuth(false);
                     return response;
                 });
         };
@@ -80,6 +86,7 @@
         self.logout = function () {
             Backand.signout().then(function () {
                 angular.copy({}, self.currentUser);
+                Backand.useAnonymousAuth(true);
             });
         };
 
