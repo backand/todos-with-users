@@ -28,6 +28,9 @@
 
         self.getSocialProviders = function () {
             return Backand.getSocialProviders()
+                .then(function(response) {
+                  return response;
+                });
         };
 
         self.socialSignin = function (provider) {
