@@ -25,7 +25,7 @@
 
         self.create = function (description) {
           var object = {description: description};
-          return Backand.object.create(objectName, object)
+          return Backand.object.create(objectName, object, {returnObject: true})
             .then(function(response) {
                 return response.data;
             });
