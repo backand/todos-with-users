@@ -54,7 +54,6 @@
         self.signin = function (username, password) {
             return Backand.signin(username, password)
                 .then(function (response) {
-    console.log('signin succeeded with user:' + response.data.username);
                     loadUserDetails();
                     Backand.useAnonymousAuth(false);
                     return response.data;
@@ -77,7 +76,11 @@
         };
 
         self.changePassword = function (oldPassword, newPassword) {
+            Backand.useAnonymousAuth(false);
             return Backand.changePassword(oldPassword, newPassword)
+                    .then(function(response) {
+                      return response;
+                    });
         };
 
         self.requestResetPassword = function (username) {
