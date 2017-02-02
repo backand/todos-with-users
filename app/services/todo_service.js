@@ -32,7 +32,7 @@
         };
 
         self.update = function (id, data) {
-          return Backand.object.create(objectName, data)
+          return Backand.object.update(objectName, id, data)
             .then(function(response) {
                 return response.data;
             });

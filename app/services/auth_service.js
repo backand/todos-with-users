@@ -12,7 +12,8 @@
         function loadUserDetails() {
 
             return Backand.user.getUserDetails()
-                .then(function (data) {
+                .then(function (response) {
+                    var data = response.data;
                     self.currentUser.details = data;
                     if(data !== null)
                     {
@@ -50,9 +51,10 @@
         self.signin = function (username, password) {
             return Backand.signin(username, password)
                 .then(function (response) {
+    console.log('signin succeeded with user:' + response.data.username);
                     loadUserDetails();
                     Backand.useAnonymousAuth(false);
-                    return response;
+                    return response.data;
                 });
         };
 
