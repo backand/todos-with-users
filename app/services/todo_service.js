@@ -12,27 +12,27 @@
         var objectName = 'todo';
 
         self.readAll = function () {
-          Backand.object.getList(objectName).then(function(response) {
+          return Backand.object.getList(objectName).then(function(response) {
             return response.data
           });
         };
 
         self.readOne = function (id) {
-          Backand.object.getOne(objectName, id).then(function(response) {
+          return Backand.object.getOne(objectName, id).then(function(response) {
             return response.data
           });
         };
 
         self.create = function (description) {
           var object = {description: description};
-          Backand.object.create(objectName, object)
+          return Backand.object.create(objectName, object)
             .then(function(response) {
                 return response.data;
             });
         };
 
         self.update = function (id, data) {
-          Backand.object.create(objectName, data)
+          return Backand.object.create(objectName, data)
             .then(function(response) {
                 return response.data;
             });
