@@ -154,7 +154,7 @@ Some additional actions are predefined here as well. For instance, **requestRese
 
 **NOTE:** You can configure your own actions to perform on the *users* object in the **Security Actions** page, or on any of the app database objects, by selecting the object's name under **Objects** and clicking on the **Actions** tab. The actions can be triggered by database actions (hooks) or on demand, by calling the action's *Request Url* (presented when you test the action). Actions can send emails, execute transactional SQL scripts, and execute server-side JavaScript Code.
 
-#### Saving Additional Parameters in the Sign up
+#### Saving Additional Parameters during Sign-up
 In many cases we would like to collect additional information from the user during registration. The additional information should be added to the *users* object of the app. This can be done by sending a *parameters* hash from the client, during the *signup* call,  and updating the server-side security action in order to save it in the object. For example, if we wanted to collect the user's company name, we would do the following:
 
 1. Update the data model, adding a `company` field to *users* object:
