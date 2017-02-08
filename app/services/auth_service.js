@@ -36,7 +36,7 @@
         self.socialSignin = function (provider) {
             //by default Backand doesn't run sign-in if the user is not sign-up, the 4th parameter true force it to
           // sign-up the user
-            return Backand.socialSignin(provider, null, true)
+            return Backand.socialSignin(provider)
                 .then(function (response) {
                     loadUserDetails();
                     return response;
