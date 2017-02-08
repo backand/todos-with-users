@@ -14,6 +14,9 @@
 
     function ChangePasswordCtrl(AuthService, $location) {
         var self = this;
+        self.currentUserInfo = null;
+
+        getCurrentUserDetails();
 
         function init() {
             self.token = $location.search().token;
@@ -43,7 +46,12 @@
         function changePasswordError(response) {
             self.error = response && response.data || 'Unknown error from server';
         }
-
+        function getCurrentUserDetails() {
+          AuthService.loadUserDetails()
+            .then(function(response){
+              self.currentUserInfo = response;
+            });
+        };
         init();
     }
 

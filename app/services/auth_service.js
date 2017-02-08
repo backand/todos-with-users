@@ -11,17 +11,26 @@
 
         function loadUserDetails() {
 
-            return Backand.getUserDetails()
-                .then(function (data) {
+            return Backand.user.getUserDetails()
+                .then(function (response) {
+                    var data = response.data;
                     self.currentUser.details = data;
                     if(data !== null)
+                    {
                         self.currentUser.name = data.username;
+                    }
+                    else {
+                      Backand.useAnonymousAuth(true);
+                    }
                 });
 
         }
 
         self.getSocialProviders = function () {
             return Backand.getSocialProviders()
+                .then(function(response) {
+                  return response;
+                });
         };
 
         self.socialSignin = function (provider) {
@@ -46,7 +55,8 @@
             return Backand.signin(username, password)
                 .then(function (response) {
                     loadUserDetails();
-                    return response;
+                    Backand.useAnonymousAuth(false);
+                    return response.data;
                 });
         };
 
@@ -66,7 +76,11 @@
         };
 
         self.changePassword = function (oldPassword, newPassword) {
+            Backand.useAnonymousAuth(false);
             return Backand.changePassword(oldPassword, newPassword)
+                    .then(function(response) {
+                      return response;
+                    });
         };
 
         self.requestResetPassword = function (username) {
@@ -80,6 +94,7 @@
         self.logout = function () {
             Backand.signout().then(function () {
                 angular.copy({}, self.currentUser);
+                Backand.useAnonymousAuth(true);
             });
         };
 

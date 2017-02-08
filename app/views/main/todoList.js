@@ -23,7 +23,8 @@
          * Read the to do list from the database
          */
         function readTodoList() {
-            TodoService.readAll().then(onReadListSuccess, errorHandler);
+            TodoService.readAll()
+              .then(onReadListSuccess, errorHandler);
         }
 
         /**

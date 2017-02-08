@@ -30,7 +30,8 @@ module.exports = function(config) {
       'bower_components/jquery-ui/jquery-ui.js',
       'bower_components/angular-ui-sortable/sortable.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
-      'bower_components/angularbknd-sdk/dist/backand.min.js',
+      'bower_components/backand-vanilla-sdk/dist/backand.js',
+      'bower_components/backand-angular1-sdk/dist/backand.provider.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

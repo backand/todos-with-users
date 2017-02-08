@@ -16,7 +16,15 @@
 
         self.appName = AuthService.appName;
         self.error = $state.params.error;
-        self.socialProviders = AuthService.getSocialProviders();
+        getSocialProviderDetails();
+        function getSocialProviderDetails() {
+
+          self.socialProviders = AuthService.getSocialProviders().then(onSocialProviderSuccess, showError);
+        };
+
+        function onSocialProviderSuccess(providers) {
+          self.socialProviders = providers;
+        };
 
         self.authenticate = function () {
             self.error = null;
