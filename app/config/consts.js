@@ -1,9 +1,9 @@
 (function() {
   angular.module('mytodoApp.config.consts', [])
     .constant('CONSTS', {
-      anonymousToken: 'cadf93db-db2a-441d-be5d-886d40eb9095',
-      signUpToken: '57061b78-9ff8-4188-97fc-d1609d25c9ea',
-      appName: 'billocktodowithusers2'
+      anonymousToken: '6adbc622-36b5-496c-b288-19ea28816f10',
+      signUpToken: '6adbc622-36b5-496c-b288-19ea28816f10',
+      appName: 'backandtodoapp'
     });
 
 })();
