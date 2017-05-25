@@ -91,9 +91,9 @@
 <div class="social-signin-block">
     <h4>or Sign {{login.newUser ? 'Up' : 'In'}} with:</h4>
     <a class="btn btn-block btn-social"
-       ng-repeat="(providerKey, providerDetails) in login.socialProviders"
+       ng-repeat="(providerKey, providerDetails) in login.socialProviders.data"
        ng-class="'btn-' + providerDetails.name"
        ng-click="login.socialSignin(providerDetails)">
-        <i class="fa" ng-class="'fa-' + providerDetails.css"></i> {{providerDetails.label}}
+        <i class="fa" ng-class="'fa-' + providerDetails.css"></i> {{providerDetails.name}}
     </a>
 </div>
