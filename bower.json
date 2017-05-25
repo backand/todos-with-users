@@ -11,7 +11,8 @@
     "angular-touch": "^1.5.x",
     "angular-ui-sortable": "~0.13.3",
     "angular-ui-router": "~0.2.13",
-    "backand-angular1-sdk": "^1.9.5"
+    "backand-angular1-sdk": "^1.9.5",
+    "backand-vanilla-sdk": "1.1.x"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.x"
